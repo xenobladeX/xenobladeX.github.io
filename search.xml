@@ -4,6 +4,57 @@
   
     
     <entry>
+      <title><![CDATA[XMPPFramework源码分析<二> - JID]]></title>
+      <url>http://yoursite.com/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%BA%8C-JID/</url>
+      <content type="html"><![CDATA[<p>XMPP的地址叫做JabberID（简写为JID），用来标示XMPP网络中的各个XMPP实体。JID有三个属性：domain，node identifier和resource，其中domain是必不可少的部分。（注意：domain和user部分是不分大小写的，但是resource区分大小写。）</p>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ol>
+<li><p>user</p>
+<p> 通常表示一个向服务器或网关请求和使用网络服务的实体(比如一个客户端),当然它也能够表示其他的实体(比如在多用户聊天系统中的一个房间)。</p>
+</li>
+<li><p>domain</p>
+<p> 通常指网络中的网关或者服务器。</p>
+</li>
+<li><p>resource</p>
+<p> 通常表示一个特定的会话（与某个设备），连接（与某个地址），或者一个附属于某个节点ID实体相关实体的对象（比如多用户聊天室中的一个参加者）。</p>
+</li>
+</ol>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li><p><code>+ (XMPPJID *)jidWithString:(NSString *)jidStr</code></p>
+<p>  根据JID的组成规则，从JID字符串中生成JID模型。</p>
+<ol>
+<li><p><code>+ (BOOL)parse:(NSString *)jidStr outUser:(NSString **)user outDomain:(NSString **)domain outResource:(NSString **)resource</code></p>
+<p> 从字符串中分割出user、domain与resource。</p>
+<blockquote>
+<p>JID字符串的规则为[node”@”]domain[“/“resource]，所以查找”@”与”/“的<code>NSRange</code></p>
+<blockquote>
+<p>获得user、domain、resource，小写转换</p>
+<blockquote>
+<p>判断domain不包含”@””，resource不再包含”/“</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+<li><p>copy</p>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p><code>- (BOOL)isEqualToJID:(XMPPJID *)aJID options:(XMPPJIDCompareOptions)mask</code></p>
+<p>  该方法判断两个JID是否相同，mask限定比较的范围。比常用的<code>isEqual:</code>方法要快（<code>isEqual:</code>是NSObject的方法，比较的是hash返回的值）。</p>
+<p>  三个属性分别进行字符串内容比较<code>isEqualToString :</code></p>
+<blockquote>
+<p>题外话：XMPPJID实现了<code>- (NSUInteger)hash</code>，利用MurmurHash2库，将3个属性字符串的hash值合并。所以JID可以直接进行<code>isEqual:</code>比较。</p>
+</blockquote>
+</li>
+</ul>
+<p>​</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《<a href="http://blog.csdn.net/wbw1985/article/details/5502272" target="_blank" rel="external">XMPP协议的原理介绍</a>》</p>
+<p>《<a href="http://www.cnphp6.com/archives/25578" target="_blank" rel="external">XMPP JID 和通信原语有3种：MESSAGE、PRESENCE和IQ</a>》</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[XMPPFramework源码分析<一> - 消息]]></title>
       <url>http://yoursite.com/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%80-%E6%B6%88%E6%81%AF/</url>
       <content type="html"><![CDATA[<p>XMPPFramework所有的消息都是以xml的形式通过XMPPStream传递，数据的解析和包装都是基于xml文件操作，这里消息又被细分为了Message、Presence、IQ。</p>
