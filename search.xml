@@ -6,7 +6,7 @@
     <entry>
       <title><![CDATA[XMPPFramework源码分析<一> - 消息]]></title>
       <url>http://yoursite.com/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%80-%E6%B6%88%E6%81%AF/</url>
-      <content type="html"><![CDATA[<h1 id="XMPPFramework源码分析-lt-一-gt-消息"><a href="#XMPPFramework源码分析-lt-一-gt-消息" class="headerlink" title="XMPPFramework源码分析&lt;一&gt; - 消息"></a>XMPPFramework源码分析&lt;一&gt; - 消息</h1><p>XMPPFramework所有的消息都是以xml的形式通过XMPPStream传递，数据的解析和包装都是基于xml文件操作，这里消息又被细分为了Message、Presence、IQ。</p>
+      <content type="html"><![CDATA[<p>XMPPFramework所有的消息都是以xml的形式通过XMPPStream传递，数据的解析和包装都是基于xml文件操作，这里消息又被细分为了Message、Presence、IQ。</p>
 <h2 id="XMPPElement"><a href="#XMPPElement" class="headerlink" title="XMPPElement"></a>XMPPElement</h2><p>XMPPElement是XMPP三大消息类型Message、Presence、IQ的基类，继承自NSXMLElement，值得注意的是在ios平台上采用更加高效的KissXML来代替NSXMLElement进行xml的解析。</p>
 <h3 id="协议实现："><a href="#协议实现：" class="headerlink" title="协议实现："></a>协议实现：</h3><ol>
 <li><p><code>- (id)initWithCoder:(NSCoder *)coder</code></p>
