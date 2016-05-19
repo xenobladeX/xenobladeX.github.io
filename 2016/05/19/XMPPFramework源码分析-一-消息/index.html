@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="This is Ding Ming's Blog on GitHub"><title>XMPPFramework源码分析&lt;一&gt; - 消息 | The Zohar</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/4.1.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">XMPPFramework源码分析&lt;一&gt; - 消息</h1><a id="logo" href="/.">The Zohar</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">XMPPFramework源码分析&lt;一&gt; - 消息</h1><div class="post-meta">May 19, 2016<span> | </span><span class="category"><a href="/categories/IOS/">IOS</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><a data-thread-key="2016/05/19/XMPPFramework源码分析-一-消息/" href="/2016/05/19/XMPPFramework源码分析-一-消息/#comments" class="ds-thread-count"></a><div class="post-content"><h1 id="XMPPFramework源码分析-lt-一-gt-消息"><a href="#XMPPFramework源码分析-lt-一-gt-消息" class="headerlink" title="XMPPFramework源码分析&lt;一&gt; - 消息"></a>XMPPFramework源码分析&lt;一&gt; - 消息</h1><p>XMPPFramework所有的消息都是以xml的形式通过XMPPStream传递，数据的解析和包装都是基于xml文件操作，这里消息又被细分为了Message、Presence、IQ。</p>
+<h2 id="XMPPElement"><a href="#XMPPElement" class="headerlink" title="XMPPElement"></a>XMPPElement</h2><p>XMPPElement是XMPP三大消息类型Message、Presence、IQ的基类，继承自NSXMLElement，值得注意的是在ios平台上采用更加高效的KissXML来代替NSXMLElement进行xml的解析。</p>
+<h3 id="协议实现："><a href="#协议实现：" class="headerlink" title="协议实现："></a>协议实现：</h3><ol>
+<li><p><code>- (id)initWithCoder:(NSCoder *)coder</code></p>
+<p> NSCoding协议</p>
+<blockquote>
+<p>用<code>[coder decodeObjectForKey:@&quot;xmlString&quot;]</code>解码成xml字符串</p>
+<blockquote>
+<p>用XMPPElement的<code>initWithXMLString:</code>转换成XMPPElement类型</p>
+<blockquote>
+<p><code>object_setClass</code>将XMPPElement类型转换为XMPPElement类型</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+<li><p><code>- (void)encodeWithCoder:(NSCoder *)coder</code></p>
+<p> NSCoding协议</p>
+<blockquote>
+<p>调用<code>compactXMLString</code>将XMPPElement转化为压缩型xml字符串</p>
+<blockquote>
+<p>调用NSXMLElement的<code>encodeObject</code>对xml字符串进行编码</p>
+</blockquote>
+</blockquote>
+</li>
+<li><p><code>- (id)copyWithZone:(NSZone *)zone</code></p>
+<p> NSCopy协议，由于XMPPElement继承自NSXMLElement，所以获得NSXMLElement类型的copy后，用<code>object_setClass</code>运行时将此备份转换为XMPPElement类型。</p>
+</li>
+</ol>
+<h3 id="公开接口："><a href="#公开接口：" class="headerlink" title="公开接口："></a>公开接口：</h3><ol>
+<li>Jabber通信中常用的<strong>属性方法</strong>，包括elementID、to、from、guid、toStr、fromStr、guidStr、timeStr，通过XML解析相应元素的方式来提供。<ul>
+<li>elementID：元素id</li>
+<li>to：解析后的收件人JID模型（从toStr生成）</li>
+<li>from：解析后的发件人JID模型（从fromStr生成）</li>
+<li>guid：全局唯一标志符</li>
+<li>toStr：发件人JID字符串</li>
+<li>fromStr：收件人JID字符串</li>
+<li>guidStr：guid字符串</li>
+<li>timeStr：发送时间字符串</li>
+</ul>
+</li>
+<li>判断to或from是否相同的方法</li>
+</ol>
+<h2 id="XMPPMessage"><a href="#XMPPMessage" class="headerlink" title="XMPPMessage"></a>XMPPMessage</h2><p>message是一种基于<strong>推送消息</strong>方法，以<message>作为元素，它不要求响应。主要用于IM、groupChat、alert和notification之类的应用中。</message></p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><ol>
+<li><p><code>+ (XMPPMessage *)messageFromElement:(NSXMLElement *)element</code></p>
+<p> 将NSXMLElement对象替换成XMPPMessage实例</p>
+<p> 依然使用<code>object_setClass</code></p>
+</li>
+<li><p><code>- (id)initWithType:(NSString *)type to:(XMPPJID *)jid elementID:(NSString *)eid child:(NSXMLElement *)childElement</code></p>
+<blockquote>
+<p>以”message”初始化XML元素</p>
+<blockquote>
+<p>添加type、to、id属性</p>
+<blockquote>
+<p>插入子元素</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</li>
+</ol>
+<h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><ol>
+<li><p>属性：type</p>
+<ul>
+<li>normal：类似于email，主要特点是不要求响应；</li>
+<li>chat：类似于qq里的好友即时聊天，主要特点是实时通讯；</li>
+<li>groupchat：类似于聊天室里的群聊；</li>
+<li>headline：用于发送alert和notification；</li>
+<li>error：如果发送message出错，发现错误的实体会用这个类别来通知发送者出错了；</li>
+</ul>
+</li>
+<li><p>内容</p>
+<p> body、subject、bodyForlanguage、thread</p>
+</li>
+<li><p>添加子元素</p>
+<ul>
+<li><code>- (void)addSubject:(NSString *)subject</code></li>
+<li><code>- (void)addBody:(NSString *)body</code></li>
+<li><code>- (void)addBody:(NSString *)body withLanguage:(NSString *)language</code></li>
+<li><code>- (void)addThread:(NSString *)thread</code></li>
+</ul>
+</li>
+<li><p>类型判断</p>
+</li>
+</ol>
+<p>​</p>
+<h2 id="XMPPPresence"><a href="#XMPPPresence" class="headerlink" title="XMPPPresence"></a>XMPPPresence</h2><p>presence用来表明<strong>用户的状态</strong>，如：online、away、dnd(请勿打扰)等。要想接受presence消息，必须经过一个叫做presence subscription的授权过程。 </p>
+<h3 id="属性：type"><a href="#属性：type" class="headerlink" title="属性：type"></a>属性：type</h3><ul>
+<li>subscribe：订阅其他用户的状态</li>
+<li>probe：请求获取其他用户的状态</li>
+<li>unavailable：不可用，离线（offline）状态</li>
+</ul>
+<h3 id="内容："><a href="#内容：" class="headerlink" title="内容："></a>内容：</h3><ol>
+<li><p>show：</p>
+<ol>
+<li>chat：聊天中</li>
+<li>away：暂时离开</li>
+<li>xa：extend Away，长时间离开</li>
+<li>dnd：勿打扰</li>
+</ol>
+</li>
+<li><p>status：</p>
+<p> 格式自由，可阅读的文本。也叫做rich presence或者extended presence，常用来表示用户当前心情，活动，听的歌曲，看的视频，所在的聊天室，访问的网页，玩的游戏等。</p>
+</li>
+<li><p>priority：</p>
+<p> 范围-128~127。高优先级的resource能接受发送到bare JID的消息，低优先级的resource不能。优先级为负数的resource不能收到发送到bare JID的消息。</p>
+</li>
+</ol>
+<h2 id="XMPPIQ"><a href="#XMPPIQ" class="headerlink" title="XMPPIQ"></a>XMPPIQ</h2><p>一种<strong>请求／响应机制</strong>，从一个实体发送请求，另外一个实体接受请求，并进行响应。例如，client在stream的上下文中插入一个元素，向Server请求得到自己的好友列表，Server返回一个，里面是请求的结果。 </p>
+<h3 id="属性：type-1"><a href="#属性：type-1" class="headerlink" title="属性：type"></a>属性：type</h3><ul>
+<li>Get :获取当前域值。类似于http get方法。</li>
+</ul>
+<ul>
+<li>Set :设置或替换get查询的值。类似于http post方法。</li>
+</ul>
+<ul>
+<li>Result :说明成功的响应了先前的查询。类似于http状态码200。</li>
+<li>Error: 查询和响应中出现的错误。</li>
+</ul>
+<h3 id="接口-1"><a href="#接口-1" class="headerlink" title="接口"></a>接口</h3><ol>
+<li><p><code>- (NSXMLElement *)childElement</code></p>
+<p> 获取单个非错误信息的元素</p>
+</li>
+<li><p><code>- (NSXMLElement *)childErrorElement</code></p>
+<p> 获取错误信息的元素</p>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《<a href="http://blog.csdn.net/wbw1985/article/details/5502272" target="_blank" rel="external">XMPP协议的原理介绍</a>》</p>
+<p>《<a href="http://www.cnphp6.com/archives/25578" target="_blank" rel="external">XMPP JID 和通信原语有3种：MESSAGE、PRESENCE和IQ</a>》</p>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://yoursite.com/2016/05/19/XMPPFramework源码分析-一-消息/" data-id="ciodwwg8g00003g2wcl7hvgr6" class="article-share-link">分享到</a><div class="tags"><a href="/tags/XMPP/">XMPP</a></div><div class="post-nav"><a href="/2016/05/18/多重委托-MultiDelegate-官方解释/" class="next">多重委托(MultiDelegate)官方解释</a></div><div data-thread-key="2016/05/19/XMPPFramework源码分析-一-消息/" data-title="XMPPFramework源码分析&lt;一&gt; - 消息" data-url="http://yoursite.com/2016/05/19/XMPPFramework源码分析-一-消息/" class="ds-share flat"><div class="ds-share-inline"><ul class="ds-share-icons-16"><li data-toggle="ds-share-icons-more"><a href="javascript:void(0);" class="ds-more">分享到：</a></li><li><a href="javascript:void(0);" data-service="weibo" class="ds-weibo">微博</a></li><li><a href="javascript:void(0);" data-service="qzone" class="ds-qzone">QQ空间</a></li><li><a href="javascript:void(0);" data-service="qqt" class="ds-qqt">腾讯微博</a></li><li><a href="javascript:void(0);" data-service="wechat" class="ds-wechat">微信</a></li></ul><div class="ds-share-icons-more"></div></div></div><div data-thread-key="2016/05/19/XMPPFramework源码分析-一-消息/" data-title="XMPPFramework源码分析&lt;一&gt; - 消息" data-url="http://yoursite.com/2016/05/19/XMPPFramework源码分析-一-消息/" data-author-key="1" class="ds-thread"></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"/><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IOS/">IOS</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/XMPP/" style="font-size: 15px;">XMPP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/05/19/XMPPFramework源码分析-一-消息/">XMPPFramework源码分析<一> - 消息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/18/多重委托-MultiDelegate-官方解释/">多重委托(MultiDelegate)官方解释</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/18/hello-world/">Hello World</a></li></ul></div><div class="widget"><div class="comments-title"><i class="fa fa-comment-o"> 最近评论</i></div><div data-num-items="5" data-show-avatars="0" data-show-time="1" data-show-admin="0" data-excerpt-length="32" data-show-title="1" class="ds-recent-comments"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© <a href="/." rel="nofollow">The Zohar.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="/css/jquery.fancybox.css?v=0.0.0"><script>var duoshuoQuery = {short_name:'xenobladex'};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
