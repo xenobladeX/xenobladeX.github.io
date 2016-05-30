@@ -191,12 +191,7 @@
     <entry>
       <title><![CDATA[多重委托(MultiDelegate)官方解释]]></title>
       <url>http://yoursite.com/2016/05/18/%E5%A4%9A%E9%87%8D%E5%A7%94%E6%89%98-MultiDelegate-%E5%AE%98%E6%96%B9%E8%A7%A3%E9%87%8A/</url>
-      <content type="html"><![CDATA[<h1 id="多重委托"><a href="#多重委托" class="headerlink" title="多重委托"></a>多重委托</h1><hr>
-<ul>
-<li>什么是多重委托</li>
-<li>使用的原因</li>
-<li>为什么不使用普通的委托与通知</li>
-</ul>
+      <content type="html"><![CDATA[<p>该文档回答了这几个问题：(1)什么是多重委托？(2)使用的原因。(3)为什么不使用普通的委托与通知？</p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><hr>
 <p>苹果有两种常用的回调方式：</p>
 <ul>
