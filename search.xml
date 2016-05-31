@@ -5,7 +5,7 @@
     
     <entry>
       <title><![CDATA[IOS编译打包提交自动化]]></title>
-      <url>http://yoursite.com/2016/05/31/IOS%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E6%8F%90%E4%BA%A4%E8%87%AA%E5%8A%A8%E5%8C%96/</url>
+      <url>http://xenobladex.github.io/2016/05/31/IOS%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E6%8F%90%E4%BA%A4%E8%87%AA%E5%8A%A8%E5%8C%96/</url>
       <content type="html"><![CDATA[<p>该操作是指：首先对Xcode的Project或Workspace进行编译，编译通过的应用会生成app文件，为了提供给测试使用，我们需要将.app包转为.ipa包</p>
 <p>实现方法有两种，AppleScript和Shell脚本</p>
 <p>Shell脚本下一个值得参考的样例是<a href="https://github.com/webfrogs/xcode_shell" target="_blank" rel="external">webfrogs/xcode_shell</a></p>
@@ -53,7 +53,7 @@
     
     <entry>
       <title><![CDATA[XMPPFramework源码分析<三> - 流]]></title>
-      <url>http://yoursite.com/2016/05/31/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%89-%E6%B5%81/</url>
+      <url>http://xenobladex.github.io/2016/05/31/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%89-%E6%B5%81/</url>
       <content type="html"><![CDATA[<p>XMPPStream是XMPPFramework的<strong>核心</strong>，所有的消息的发送和接收都是在XMPPStream中进行的。借助CocoaAsyncSocket实现socket通信，申明了GCDAsyncSocketDelegate委托。</p>
 <h2 id="私有成员"><a href="#私有成员" class="headerlink" title="私有成员"></a>私有成员</h2><ol>
 <li>xmppQueue：线程队列</li>
@@ -378,7 +378,7 @@
     
     <entry>
       <title><![CDATA[XMPPFramework源码分析<二> - JID]]></title>
-      <url>http://yoursite.com/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%BA%8C-JID/</url>
+      <url>http://xenobladex.github.io/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%BA%8C-JID/</url>
       <content type="html"><![CDATA[<p>XMPP的地址叫做JabberID（简写为JID），用来标示XMPP网络中的各个XMPP实体。JID有三个属性：domain，node identifier和resource，其中domain是必不可少的部分。（注意：domain和user部分是不分大小写的，但是resource区分大小写。）</p>
 <h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><ol>
 <li><p>user</p>
@@ -429,7 +429,7 @@
     
     <entry>
       <title><![CDATA[XMPPFramework源码分析<一> - 消息]]></title>
-      <url>http://yoursite.com/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%80-%E6%B6%88%E6%81%AF/</url>
+      <url>http://xenobladex.github.io/2016/05/19/XMPPFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-%E4%B8%80-%E6%B6%88%E6%81%AF/</url>
       <content type="html"><![CDATA[<p>XMPPFramework所有的消息都是以xml的形式通过XMPPStream传递，数据的解析和包装都是基于xml文件操作，这里消息又被细分为了Message、Presence、IQ。</p>
 <h2 id="XMPPElement"><a href="#XMPPElement" class="headerlink" title="XMPPElement"></a>XMPPElement</h2><p>XMPPElement是XMPP三大消息类型Message、Presence、IQ的基类，继承自NSXMLElement，值得注意的是在ios平台上采用更加高效的KissXML来代替NSXMLElement进行xml的解析。</p>
 <h3 id="协议实现："><a href="#协议实现：" class="headerlink" title="协议实现："></a>协议实现：</h3><ol>
@@ -563,7 +563,7 @@
     
     <entry>
       <title><![CDATA[多重委托(MultiDelegate)官方解释]]></title>
-      <url>http://yoursite.com/2016/05/18/%E5%A4%9A%E9%87%8D%E5%A7%94%E6%89%98-MultiDelegate-%E5%AE%98%E6%96%B9%E8%A7%A3%E9%87%8A/</url>
+      <url>http://xenobladex.github.io/2016/05/18/%E5%A4%9A%E9%87%8D%E5%A7%94%E6%89%98-MultiDelegate-%E5%AE%98%E6%96%B9%E8%A7%A3%E9%87%8A/</url>
       <content type="html"><![CDATA[<p>该文档回答了这几个问题：(1)什么是多重委托？(2)使用的原因。(3)为什么不使用普通的委托与通知？</p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><hr>
 <p>苹果有两种常用的回调方式：</p>
@@ -606,7 +606,7 @@
     
     <entry>
       <title><![CDATA[Hello World]]></title>
-      <url>http://yoursite.com/2016/05/18/hello-world/</url>
+      <url>http://xenobladex.github.io/2016/05/18/hello-world/</url>
       <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
